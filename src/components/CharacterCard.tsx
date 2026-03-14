@@ -1,4 +1,6 @@
 import type { Character } from "../types/type"
+import { useLocationStore } from "../store/locationSlice"
+
 
 export function CharacterCard({ character }: { character: Character }){
     const statusColor: Record<string, string> = {
@@ -6,7 +8,11 @@ export function CharacterCard({ character }: { character: Character }){
     Dead: 'badge-error',
     unknown: 'badge-warning',
   }
+  const setLocationUrl = useLocationStore((state) => state.setLocationUrl)
 
+  const handleLocationCick =() =>{
+    setLocationUrl(character.location.url)
+  }
   const colorClass =statusColor[character.status] ?? 'badge-ghost'
     return(
         <div data-theme='pastel' className="card bg-base-100 w-72 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-base-300">
