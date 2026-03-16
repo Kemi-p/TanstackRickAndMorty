@@ -2,6 +2,7 @@ import { useCharacterStore } from "../store/characterSlice";
 import type { Character } from "../types/type";
 import { useLocationStore } from "../store/locationSlice";
 import { useNavigate } from "react-router-dom";
+import { useEpisodeStore } from "../store/episodeSlice";
 
 export function CharacterCard({ character }: { character: Character }) {
   const statusColor: Record<string, string> = {
@@ -18,12 +19,13 @@ export function CharacterCard({ character }: { character: Character }) {
     (state) => state.selectedCharacter,
   );
   const setLocationUrl = useLocationStore((state) => state.setLocationUrl);
-
+const setEpisodeUrls = useEpisodeStore((state) => state.setEpisodeUrls)
   const isSelected = selectedCharacter?.id === character.id;
 
   const handleClick = () => {
     setSelectedCharacter(character);
     setLocationUrl(character.location.url);
+    setEpisodeUrls(character.episode)
     nav('/dashboard')
   };
 
