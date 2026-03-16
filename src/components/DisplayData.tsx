@@ -6,19 +6,32 @@ import { CharacterCard } from "./CharacterCard";
 export function DisplayData() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState('')
+const [gender, setGender] = useState('')
+
   const { isPending, error, data } = useQuery({
-    queryKey: ["characterData", page, search],
+    queryKey: ["characterData", page, search, status,gender],
     queryFn: () =>
       fetch(
-        `https://rickandmortyapi.com/api/character?page=${page}&name=${search}`,
+        `https://rickandmortyapi.com/api/character?page=${page}&name=${search}&status=${status}&gender=${gender}`,
       ).then((res) => res.json()),
     placeholderData: keepPreviousData,
   });
 
   const handleSearch = (value: string) => {
     setSearch(value);
-    setPage(1); // reset to page 1 on every new search
+    setPage(1); 
   };
+
+  const handleStatus = (value: string) => {
+  setStatus(value)
+  setPage(1)
+}
+
+const handleGender = (value: string) => {
+  setGender(value)
+  setPage(1)
+}
 
   if (isPending)
     return (
@@ -43,7 +56,7 @@ export function DisplayData() {
 
   return (
     <div>
-      <div>
+      <div className="flex gap-2 p-4 flex-wrap">
         <input
           type="text"
           placeholder="search by characters name"
@@ -51,6 +64,28 @@ export function DisplayData() {
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
         />
+         <select
+    className="select select-bordered"
+    value={status}
+    onChange={e => handleStatus(e.target.value)}
+  >
+    <option value="">All Statuses</option>
+    <option value="alive">Alive</option>
+    <option value="dead">Dead</option>
+    <option value="unknown">Unknown</option>
+  </select>
+
+  <select
+    className="select select-bordered"
+    value={gender}
+    onChange={e => handleGender(e.target.value)}
+  >
+    <option value="">All Genders</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="genderless">Genderless</option>
+    <option value="unknown">Unknown</option>
+  </select>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
         {characters.map((character) => (

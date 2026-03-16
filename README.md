@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# Rick & Morty Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React dashboard built with TanStack Query and Zustand that lets you browse Rick & Morty characters, and view their location and episode details.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React** + **TypeScript** + **Vite**
+- **TanStack Query** — server state management and data fetching
+- **Zustand** — client state management
+- **DaisyUI** + **Tailwind CSS** — styling
+- **React Router** — client-side routing
+- **Rick & Morty API** — https://rickandmortyapi.com
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Browse all characters with search by name and paginated results
+- Click any character to navigate to a detail dashboard
+- Dashboard displays character info, last known location, and all episodes they appeared in
+- Each section manages its own state and API calls independently via Zustand slices
+- Smooth pagination with `keepPreviousData` so the UI never flashes on page change
 
-## Expanding the ESLint configuration
+## Screenshots 
+### Character Browser
+![Character Page](public/characters-page.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Dashboard
+![Dashboard](public/dashboard-page.png)
 
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
+### Search
+![Search](public/search-page.png)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Project Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+src/
+├── components/
+│   ├── CharacterCard.tsx     # Individual character card with click handler
+│   ├── DisplayData.tsx       # Character grid with search and pagination
+│   ├── LocationCard.tsx      # Fetches and displays character location
+│   └── EpisodeCard.tsx       # Fetches and displays all character episodes
+├── pages/
+│   ├── characterPage.tsx     # Page 1 — character browser
+│   └── dashboardPage.tsx     # Page 2 — character detail dashboard
+├── store/
+│   ├── characterSlice.ts     # Zustand store for selected character
+│   ├── locationSlice.ts      # Zustand store for location URL
+│   └── episodeSlice.ts       # Zustand store for episode URLs
+└── types/
+    └── type.ts               # TypeScript interfaces for API responses
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## State Management
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+Each section has its own Zustand slice created with `create`:
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- **characterSlice** — stores the currently selected character
+- **locationSlice** — stores the location URL extracted from the selected character
+- **episodeSlice** — stores the array of episode URLs from the selected character
+
+When a character card is clicked, all three stores update simultaneously. The `LocationCard` and `EpisodeCard` components independently read from their respective stores and trigger their own TanStack Query fetches.
+
+## Data Flow
+
 ```
+Click character card
+  → setSelectedCharacter  (characterSlice)
+  → setLocationUrl        (locationSlice)
+  → setEpisodeUrls        (episodeSlice)
+  → navigate to /dashboard
+
+Dashboard mounts
+  → LocationCard reads locationUrl → fetches location details
+  → EpisodeCard reads episodeUrls → fetches all episodes in parallel
+```
+
+## Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+```
+
+## API Reference
+
+| Endpoint | Used for |
+|---|---|
+| `/api/character?page={n}&name={q}` | Paginated + searchable character list |
+| `/api/location/{id}` | Location details (via URL from character response) |
+| `/api/episode/{id}` | Episode details (via URLs from character response) |

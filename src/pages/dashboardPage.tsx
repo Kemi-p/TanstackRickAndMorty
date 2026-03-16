@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useCharacterStore } from "../store/characterSlice";
 import { LocationCard } from "../components/LocationCard";
+import { EpisodeCard } from "../components/episodeCard";
 
 export function DashboardPage() {
   const selectedCharacter = useCharacterStore(
@@ -47,6 +48,7 @@ export function DashboardPage() {
         </div>
         <div className="flex flex-col gap-4">
           <LocationCard />
+          <EpisodeCard/>
         </div>
     </div>
     </div>
