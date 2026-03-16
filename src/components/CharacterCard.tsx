@@ -1,6 +1,7 @@
 import { useCharacterStore } from "../store/characterSlice";
 import type { Character } from "../types/type";
 import { useLocationStore } from "../store/locationSlice";
+import { useNavigate } from "react-router-dom";
 
 export function CharacterCard({ character }: { character: Character }) {
   const statusColor: Record<string, string> = {
@@ -8,6 +9,8 @@ export function CharacterCard({ character }: { character: Character }) {
     Dead: "badge-error",
     unknown: "badge-warning",
   };
+  const nav = useNavigate();
+
   const setSelectedCharacter = useCharacterStore(
     (state) => state.setSelectedCharacter,
   );
@@ -21,6 +24,7 @@ export function CharacterCard({ character }: { character: Character }) {
   const handleClick = () => {
     setSelectedCharacter(character);
     setLocationUrl(character.location.url);
+    nav('/dashboard')
   };
 
   const colorClass = statusColor[character.status] ?? "badge-ghost";
