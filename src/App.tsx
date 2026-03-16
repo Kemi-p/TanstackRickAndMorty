@@ -1,13 +1,19 @@
-import './App.css'
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
-import { DisplayData } from './components/DisplayData'
-import { LocationCard } from './components/LocationCard'
-import { useCharacterStore } from './store/characterSlice'
+import "./App.css";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import { DisplayData } from "./components/DisplayData";
+import { LocationCard } from "./components/LocationCard";
+import { useCharacterStore } from "./store/characterSlice";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
-function Dashboard(){
-  const selectedCharacter = useCharacterStore((state) => state.selectedCharacter)
+function Dashboard() {
+  const selectedCharacter = useCharacterStore(
+    (state) => state.selectedCharacter,
+  );
 
   return (
     <div>
@@ -20,19 +26,16 @@ function Dashboard(){
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <h1 className='text-lg font-bold p-4'>
-        Characters
-      </h1>
-      <Dashboard/>
+      <h1 className="text-lg font-bold p-4">Characters</h1>
+      <Dashboard />
     </QueryClientProvider>
-  
-  )
+  );
 }
 
-export default App
+export default App;
