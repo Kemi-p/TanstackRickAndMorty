@@ -25,7 +25,7 @@ export function DashboardPage() {
 
       <div className="flex items-center gap-4">
         <button className="btn btn-outline btn-sm" onClick={() => nav("/")}>
-          ← Back
+          Back
         </button>
         <h1 className="text-lg font-bold">Dashboard</h1>
       </div>
