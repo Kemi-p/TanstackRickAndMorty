@@ -54,6 +54,7 @@ import { CharacterCard } from "./CharacterCard"
             ))}
         </div>
 
+
         <div className="flex justify-center items-center gap-4 py-6">
             <button onClick={() => setPage(page=> page-1)} disabled ={page === 1}>
                 Previous
