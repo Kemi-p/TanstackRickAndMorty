@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import type { Character } from "../types/type";
 import { devtools } from "zustand/middleware";
 
 interface CharacterStore {
@@ -7,7 +6,7 @@ interface CharacterStore {
   setEpisodeUrls: (urls: string[]) => void;
 }
 
-export const useCharacterStore = create<CharacterStore>()(
+export const useEpisodeStore = create<CharacterStore>()(
   devtools(
     (set) => ({
       episodeUrls: [],
